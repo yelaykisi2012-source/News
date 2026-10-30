@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { ThemeProvider } from "./context/ThemeContext";
+import { NewsProvider, useNews } from "./context/NewsContext";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import Home from "./pages/Home";
+import NewsDetail from "./pages/NewsDetail";
+import BookmarkList from "./components/user/BookmarkList";
+import Toast from "./components/common/Toast";
 
-function App() {
+function MainContent() {
+  const { selectedArticle } = useNews();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+      {/* Navigation Bar */}
+      <Navbar />
+
+      {/* Main Page Area */}
+      <div className="flex-1">
+        {selectedArticle ? <NewsDetail /> : <Home />}
+      </div>
+
+      {/* Saved / Bookmarks slide-in drawer */}
+      <BookmarkList />
+
+      {/* Interactive Toasts */}
+      <Toast />
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <ThemeProvider>
+      <NewsProvider>
+        <MainContent />
+      </NewsProvider>
+    </ThemeProvider>
+  );
+}
